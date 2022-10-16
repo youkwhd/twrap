@@ -49,11 +49,8 @@ int main(int argc, char **argv)
     twrap_init(stdin);
 
     int count_break = 70;
-    int count = 0;
-
-    for (int i = 0; twrap_buf[i] != '\0'; i++) {
-        count++;
-        if (twrap_buf[i] == ' ' && ((count - 1) + twrap_word_length(&twrap_buf[i + 1]) > count_break)) { 
+    for (int i = 0, count = 0; twrap_buf[i] != '\0'; i++, count++) {
+        if (twrap_buf[i] == ' ' && (count + twrap_word_length(&twrap_buf[i + 1]) > count_break)) { 
             putchar('\n');
             count = 0;
             i++;
