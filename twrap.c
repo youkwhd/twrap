@@ -13,7 +13,7 @@ void twrap_buf_init()
 
 void twrap_buf_grow()
 {
-    int grow_size;
+    size_t grow_size;
     int grow_multiplier = 1;
 
     while ((grow_size = __twrap_buf->bytes * grow_multiplier) <= __twrap_buf->size)
