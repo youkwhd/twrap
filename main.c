@@ -1,62 +1,18 @@
 #include <stdio.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <unistd.h>
-
-#define BUF_SIZE 4096 * 5
-
-char *twrap_buf;
-size_t twrap_size = 0;
-
-void twrap_buf_init()
-{
-    twrap_buf = malloc((sizeof *twrap_buf) * BUF_SIZE);
-}
-
-void twrap_buf_free()
-{
-    free(twrap_buf);
-}
-
-void twrap_init(FILE *fp)
-{
-    twrap_buf_init();
-
-    char c;
-    while ((c = fgetc(fp)) != EOF)
-        twrap_buf[twrap_size++] = c;
-}
-
-void twrap_free()
-{
-    twrap_buf_free();
-}
-
-size_t twrap_word_length(const char *word)
-{
-    size_t length = 0;
-
-    for (; *word; word++, length++)
-        if (*word == ' ')
-            break;
-
-    return length;
-}
+#include "twrap.h"
 
 int main(int argc, char **argv)
 {
     twrap_init(stdin);
 
-    int count_break = 70;
-    for (int i = 0, count = 0; twrap_buf[i] != '\0'; i++, count++) {
-        if (twrap_buf[i] == ' ' && (count + twrap_word_length(&twrap_buf[i + 1]) > count_break)) { 
+    for (int i = 0, count = 0; __twrap_buf->buf[i] != '\0'; i++, count++) {
+        if (__twrap_buf->buf[i] == ' ' && (count + twrap_word_length(&__twrap_buf->buf[i + 1]) > COUNT_BREAK)) {
             putchar('\n');
             count = 0;
             i++;
         }
 
-        putchar(twrap_buf[i]);
+        putchar(__twrap_buf->buf[i]);
     }
 
     twrap_free();
