@@ -52,7 +52,7 @@ size_t twrap_word_length(const char *word)
     size_t length = 0;
 
     for (; *word; word++, length++)
-        if (*word == ' ')
+        if (*word == ' ' || *word == '\n')
             break;
 
     return length;
