@@ -9,9 +9,6 @@ int main(void)
     twrap_init(stdin);
 
     for (size_t i = 0, count = 0; __twrap_buf->buf[i] != '\0'; i++) {
-        /* ok, this is for count to be presicion. 
-         * + speed.
-         */
         bool set_count_zero = false;
 
         if (__twrap_buf->buf[i] == '\n')
