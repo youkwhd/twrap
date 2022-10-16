@@ -19,9 +19,7 @@ int main(void)
         }
 
         putchar(__twrap_buf->buf[i]);
-        count++;
-
-        count_reset ? count = 0 : count;
+        count_reset ? count = 0 : count++;
     }
 
     twrap_free();
