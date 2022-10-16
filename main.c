@@ -24,8 +24,9 @@ int main(void)
         }
 
         putchar(__twrap_buf->buf[i]);
+        count++;
 
-        set_count_zero ? count = 0 : count++;
+        set_count_zero ? count = 0 : count;
         set_count_one ? count = 1 : count;
     }
 
