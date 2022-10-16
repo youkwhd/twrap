@@ -26,7 +26,6 @@ void twrap_init(FILE *fp)
     char c;
     while ((c = fgetc(fp)) != EOF)
         twrap_buf[twrap_size++] = c;
-    twrap_buf[twrap_size - 1] = '\0';
 }
 
 void twrap_free()
@@ -47,13 +46,20 @@ size_t twrap_word_length(const char *word)
 
 int main(int argc, char **argv)
 {
-    /* FILE *fp = argc >= 2 ? fopen(argv[1], "r") : stdin; */
     twrap_init(stdin);
 
+    int count_break = 70;
+    int count = 0;
+
     for (int i = 0; twrap_buf[i] != '\0'; i++) {
-        if (twrap_buf[i] == ' ') { 
-            printf("%zu\n", twrap_word_length(twrap_buf + (i + 1)));
+        count++;
+        if (twrap_buf[i] == ' ' && ((count - 1) + twrap_word_length(&twrap_buf[i + 1]) > count_break)) { 
+            putchar('\n');
+            count = 0;
+            i++;
         }
+
+        putchar(twrap_buf[i]);
     }
 
     twrap_free();
