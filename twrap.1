@@ -1,0 +1,24 @@
+.TH TWRAP 1 2022-10-17 "twrap 1.0.0"
+
+.SH NAME
+twrap \- simple text wrapper utility
+
+.SH SYNOPSIS
+.B twrap
+[\fB\-l \fIline_number\fR] [\fIFILE\fR]...
+
+.SH OPTIONS
+.TP
+.BR \-l ", " \-\-line " " \fIline_number
+specifies how many character each line should have.
+
+.SH DESCRIPTION
+Wraps FILE or standard input when no FILE passed onto standard output.
+
+.SH EXAMPLES
+.TP
+.B twrap < \fIfoo.txt
+wraps the foo.txt FILE then print it onto standard output.
+
+.SH SEE ALSO
+\fBcat\fR(1)
