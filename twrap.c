@@ -1,60 +1,27 @@
-#include <stdlib.h>
-#include "twrap.h"
+#include <stdio.h>
+#include <stddef.h>
+#include <stdbool.h>
 
-twrap_buf *__twrap_buf;
+#include "twrap_buf.h"
 
-void twrap_buf_init()
+int main(void)
 {
-    __twrap_buf = malloc(sizeof *__twrap_buf);
-    __twrap_buf->bytes = (sizeof *__twrap_buf->buf) * 2048;
-    __twrap_buf->buf = malloc(__twrap_buf->bytes);
-    __twrap_buf->size = 0;
-}
+    twrap_init(stdin);
 
-void twrap_buf_grow()
-{
-    size_t grow_size;
-    int grow_multiplier = 1;
+    for (size_t i = 0, count = 0; __twrap_buf->buf[i] != '\0'; i++) {
+        bool count_reset = false;
 
-    while ((grow_size = __twrap_buf->bytes * grow_multiplier) <= __twrap_buf->size)
-        grow_multiplier++;
+        if (__twrap_buf->buf[i] == '\n')
+            count_reset = true;
+        else if (__twrap_buf->buf[i] == ' ' && count + (twrap_word_length(&__twrap_buf->buf[i + 1]) + 1) >= COUNT_BREAK) {
+            __twrap_buf->buf[i] = '\n';
+            count_reset = true;
+        }
 
-    __twrap_buf->bytes = (sizeof *__twrap_buf->buf) * grow_size;
-    __twrap_buf->buf = realloc(__twrap_buf->buf, __twrap_buf->bytes);
-}
-
-void twrap_buf_free()
-{
-    free(__twrap_buf->buf);
-    free(__twrap_buf);
-}
-
-void twrap_init(FILE *fp)
-{
-    twrap_buf_init();
-
-    char c;
-    while ((c = fgetc(fp)) != EOF) {
-        if (__twrap_buf->size > __twrap_buf->bytes)
-            twrap_buf_grow();
-
-        __twrap_buf->buf[__twrap_buf->size++] = c;
+        putchar(__twrap_buf->buf[i]);
+        count_reset ? count = 0 : count++;
     }
+
+    twrap_free();
+    return 0;
 }
-
-void twrap_free()
-{
-    twrap_buf_free();
-}
-
-size_t twrap_word_length(const char *word)
-{
-    size_t length = 0;
-
-    for (; *word; word++, length++)
-        if (*word == ' ' || *word == '\n')
-            break;
-
-    return length;
-}
-
