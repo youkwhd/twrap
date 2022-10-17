@@ -19,6 +19,9 @@ Wraps FILE or standard input when no FILE passed onto standard output.
 .TP
 .B twrap < \fIfoo.txt
 wraps the foo.txt FILE then print it onto standard output.
+.TP
+.B cat \fIfoo.txt \fR| \fBtwrap
+uses \fBcat\fR(1) to supply foo.txt as standard input.
 
 .SH SEE ALSO
 \fBcat\fR(1)
