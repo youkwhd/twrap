@@ -20,9 +20,12 @@ $(EXE): $(OBJ)
 install: $(EXE)
 	mkdir -p $(INST)
 	cp $(EXE) $(INST)
+	mkdir -p $(INST)/../man/man1/
+	cp twrap.1 $(INST)/../man/man1/
 
 uninstall:
 	$(RM) $(INST)/$(EXE)
+	$(RM) $(INST)/../man/man1/$(EXE).1
 
 clean:
 	$(RM) $(OBJ)
