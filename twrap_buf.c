@@ -30,24 +30,6 @@ void twrap_buf_free()
     free(__twrap_buf);
 }
 
-void twrap_init(FILE *fp)
-{
-    twrap_buf_init();
-
-    char c;
-    while ((c = fgetc(fp)) != EOF) {
-        if (__twrap_buf->size > __twrap_buf->bytes)
-            twrap_buf_grow();
-
-        __twrap_buf->buf[__twrap_buf->size++] = c;
-    }
-}
-
-void twrap_free()
-{
-    twrap_buf_free();
-}
-
 size_t twrap_word_length(const char *word)
 {
     size_t length = 0;
@@ -58,4 +40,3 @@ size_t twrap_word_length(const char *word)
 
     return length;
 }
-

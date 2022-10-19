@@ -15,9 +15,8 @@ typedef struct twrap_buf {
 extern twrap_buf *__twrap_buf;
 
 void twrap_buf_init();
+void twrap_buf_grow();
 void twrap_buf_free();
-void twrap_init(FILE *fp);
-void twrap_free();
 size_t twrap_word_length(const char *word);
 
 #endif
