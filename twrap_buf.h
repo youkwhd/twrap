@@ -12,7 +12,10 @@ typedef struct twrap_buf {
     size_t bytes;
 } twrap_buf;
 
-extern twrap_buf *__twrap_buf;
+/* twrap global buffer
+ * allocated after twrap_buf_init() called
+ */
+extern twrap_buf *twrap_gbuf;
 
 void twrap_buf_init();
 void twrap_buf_grow();

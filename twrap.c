@@ -11,17 +11,17 @@ int main(void)
 {
     twrap_init(stdin);
 
-    for (size_t i = 0, count = 0; __twrap_buf->buf[i] != '\0'; i++) {
+    for (size_t i = 0, count = 0; twrap_gbuf->buf[i] != '\0'; i++) {
         bool count_reset = false;
 
-        if (__twrap_buf->buf[i] == '\n') {
+        if (twrap_gbuf->buf[i] == '\n') {
             count_reset = true;
-        } else if (__twrap_buf->buf[i] == ' ' && count + (twrap_word_length(&__twrap_buf->buf[i + 1]) + 1) >= COUNT_BREAK) {
-            __twrap_buf->buf[i] = '\n';
+        } else if (twrap_gbuf->buf[i] == ' ' && count + (twrap_word_length(&twrap_gbuf->buf[i + 1]) + 1) >= COUNT_BREAK) {
+            twrap_gbuf->buf[i] = '\n';
             count_reset = true;
         }
 
-        putchar(__twrap_buf->buf[i]);
+        putchar(twrap_gbuf->buf[i]);
         count_reset ? count = 0 : count++;
     }
 
@@ -36,10 +36,10 @@ void twrap_init(FILE *fp)
 
     char c;
     while ((c = fgetc(fp)) != EOF) {
-        if (__twrap_buf->size > __twrap_buf->bytes)
+        if (twrap_gbuf->size > twrap_gbuf->bytes)
             twrap_buf_grow();
 
-        __twrap_buf->buf[__twrap_buf->size++] = c;
+        twrap_gbuf->buf[twrap_gbuf->size++] = c;
     }
 }
 

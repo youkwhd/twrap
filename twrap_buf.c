@@ -2,32 +2,31 @@
 
 #include "twrap_buf.h"
 
-twrap_buf *__twrap_buf;
+twrap_buf *twrap_gbuf;
 
 void twrap_buf_init()
 {
-    __twrap_buf = malloc(sizeof *__twrap_buf);
-    __twrap_buf->bytes = (sizeof *__twrap_buf->buf) * 2048;
-    __twrap_buf->buf = malloc(__twrap_buf->bytes);
-    __twrap_buf->size = 0;
+    twrap_gbuf = malloc(sizeof *twrap_gbuf);
+    twrap_gbuf->bytes = (sizeof *twrap_gbuf->buf) * 2048;
+    twrap_gbuf->buf = malloc(twrap_gbuf->bytes);
+    twrap_gbuf->size = 0;
 }
 
 void twrap_buf_grow()
 {
-    size_t grow_size;
     int grow_multiplier = 1;
 
-    while ((grow_size = __twrap_buf->bytes * grow_multiplier) <= __twrap_buf->size)
+    while ((twrap_gbuf->bytes * grow_multiplier) <= twrap_gbuf->size)
         grow_multiplier++;
 
-    __twrap_buf->bytes = (sizeof *__twrap_buf->buf) * grow_size;
-    __twrap_buf->buf = realloc(__twrap_buf->buf, __twrap_buf->bytes);
+    twrap_gbuf->bytes = ((sizeof *twrap_gbuf->buf) * (twrap_gbuf->size * grow_multiplier));
+    twrap_gbuf->buf = realloc(twrap_gbuf->buf, twrap_gbuf->bytes);
 }
 
 void twrap_buf_free()
 {
-    free(__twrap_buf->buf);
-    free(__twrap_buf);
+    free(twrap_gbuf->buf);
+    free(twrap_gbuf);
 }
 
 size_t twrap_word_length(const char *word)
