@@ -1,5 +1,5 @@
-#ifndef TWRAP_H
-#define TWRAP_H
+#ifndef TWRAP_BUF_H
+#define TWRAP_BUF_H
 
 #include <stdio.h>
 #include <stddef.h>
