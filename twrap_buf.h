@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <stddef.h>
 
-/* #define COUNT_BREAK 65 */
-
 typedef struct twrap_buf {
     char *buf;
     size_t size;
