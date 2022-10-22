@@ -7,7 +7,7 @@
 #include "twrap_buf.h"
 #include "twrap_args.h"
 
-#define ARGSIZ 5
+#define ARGSIZ 1
 
 void twrap_init(FILE *fp);
 void twrap_free();
