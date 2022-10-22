@@ -16,7 +16,7 @@ typedef enum twrap_arg_type {
 typedef struct twrap_arg {
     char *valid_args[2];
     twrap_arg_type arg_type;
-    void **arg_value_override;
+    void **arg_value_ptr;
 } twrap_arg;
 
 void twrap_args_init(const int argc, char **argv, twrap_arg *args, size_t args_size);
@@ -58,8 +58,8 @@ int main(int argc, char **argv)
 void twrap_args_free(twrap_arg *args, size_t args_size) 
 {
     for (int i = 0; i < (int)args_size; i++)
-         if (args[i].arg_type == ARG_TOGGLE && args[i].arg_value_override != NULL && *args[i].arg_value_override != NULL)
-             free(*args[i].arg_value_override);
+         if (args[i].arg_type == ARG_TOGGLE && args[i].arg_value_ptr != NULL && *args[i].arg_value_ptr != NULL)
+             free(*args[i].arg_value_ptr);
 }
 
 void twrap_args_init(const int argc, char **argv, twrap_arg *args, size_t args_size)
@@ -78,9 +78,9 @@ void twrap_args_init(const int argc, char **argv, twrap_arg *args, size_t args_s
                     if (args[j].arg_type == ARG_TOGGLE) {
                         bool *ptr = malloc(sizeof *ptr);
                         *ptr = true;
-                        *args[j].arg_value_override = (void *)ptr;
+                        *args[j].arg_value_ptr = (void *)ptr;
                     } else if (args[j].arg_type == ARG_VALUE) {
-                        *args[j].arg_value_override = argv[++i];
+                        *args[j].arg_value_ptr = argv[++i];
                     }
 
                     j = args_size;
