@@ -22,12 +22,13 @@ int main(int argc, char **argv)
     twrap_args_init(argc, argv, args, ARGSIZ);
     twrap_init(stdin);
 
+    size_t count_word_max = line ? atoi(line) : 65;
     for (size_t i = 0, count = 0; twrap_gbuf->buf[i] != '\0'; i++) {
         bool count_reset = false;
 
         if (twrap_gbuf->buf[i] == '\n') {
             count_reset = true;
-        } else if (twrap_gbuf->buf[i] == ' ' && count + (twrap_word_length(&twrap_gbuf->buf[i + 1]) + 1) >= (line != NULL ? (size_t)atoi(line) : COUNT_BREAK)) {
+        } else if (twrap_gbuf->buf[i] == ' ' && count + (twrap_word_length(&twrap_gbuf->buf[i + 1]) + 1) > count_word_max) {
             twrap_gbuf->buf[i] = '\n';
             count_reset = true;
         }
