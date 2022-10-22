@@ -7,7 +7,7 @@
 #include "twrap_buf.h"
 #include "twrap_args.h"
 
-#define ARGSIZ 1
+#define ARR_SIZE(arr) sizeof arr / sizeof *arr
 
 void twrap_init(FILE *fp);
 void twrap_free();
@@ -15,11 +15,11 @@ void twrap_free();
 int main(int argc, char **argv)
 {
     void *line = NULL;
-    twrap_arg args[ARGSIZ] = {
+    twrap_arg args[] = {
         {{"l", "line"}, ARG_VALUE, (void **)&line},
     };
 
-    twrap_args_init(argc, argv, args, ARGSIZ);
+    twrap_args_init(argc, argv, args, ARR_SIZE(args));
     twrap_init(stdin);
 
     size_t count_word_max = line ? atoi(line) : 65;
@@ -37,8 +37,7 @@ int main(int argc, char **argv)
         count_reset ? count = 0 : count++;
     }
 
-
-    twrap_args_free(args, ARGSIZ);
+    twrap_args_free(args, ARR_SIZE(args));
     twrap_free();
     return 0;
 }
