@@ -5,22 +5,9 @@
 #include <stdbool.h>
 
 #include "twrap_buf.h"
+#include "twrap_args.h"
 
 #define ARGSIZ 5
-
-typedef enum twrap_arg_type {
-    ARG_VALUE,
-    ARG_TOGGLE
-} twrap_arg_type;
-
-typedef struct twrap_arg {
-    char *valid_args[2];
-    twrap_arg_type arg_type;
-    void **arg_value_ptr;
-} twrap_arg;
-
-void twrap_args_init(const int argc, char **argv, twrap_arg *args, size_t args_size);
-void twrap_args_free(twrap_arg *args, size_t args_size);
 
 void twrap_init(FILE *fp);
 void twrap_free();
@@ -53,42 +40,6 @@ int main(int argc, char **argv)
     twrap_args_free(args, ARGSIZ);
     twrap_free();
     return 0;
-}
-
-void twrap_args_free(twrap_arg *args, size_t args_size) 
-{
-    for (int i = 0; i < (int)args_size; i++)
-         if (args[i].arg_type == ARG_TOGGLE && args[i].arg_value_ptr != NULL && *args[i].arg_value_ptr != NULL)
-             free(*args[i].arg_value_ptr);
-}
-
-void twrap_args_init(const int argc, char **argv, twrap_arg *args, size_t args_size)
-{
-    for (int i = 1; i < argc; i++) {
-        if (argv[i][0] != '-' || (argv[i][0] != '-' && argv[i][1] != '-'))
-            continue;
-
-        char *val = argv[i];
-        while (*val == '-')
-            val++;
-
-        for (int j = 0; j < (int)args_size; j++) {
-            for (int k = 0; k < 2; k++) {
-                if (args[j].valid_args[k] != NULL && strcmp(val, args[j].valid_args[k]) == 0) {
-                    if (args[j].arg_type == ARG_TOGGLE) {
-                        bool *ptr = malloc(sizeof *ptr);
-                        *ptr = true;
-                        *args[j].arg_value_ptr = (void *)ptr;
-                    } else if (args[j].arg_type == ARG_VALUE) {
-                        *args[j].arg_value_ptr = argv[++i];
-                    }
-
-                    j = args_size;
-                    break;
-                }
-            }
-        }
-    }
 }
 
 void twrap_init(FILE *fp)
