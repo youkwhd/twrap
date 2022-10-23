@@ -28,14 +28,3 @@ void twrap_buf_free()
     free(twrap_gbuf->buf);
     free(twrap_gbuf);
 }
-
-size_t twrap_word_length(const char *word)
-{
-    size_t length = 0;
-
-    for (; *word; word++, length++)
-        if (*word == ' ' || *word == '\n')
-            break;
-
-    return length;
-}
