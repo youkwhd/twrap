@@ -24,6 +24,5 @@ void twrap_buf_grow();
 /* free the memory of twrap_gbuf
  */
 void twrap_buf_free();
-size_t twrap_word_length(const char *word);
 
 #endif
