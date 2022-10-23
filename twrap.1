@@ -11,6 +11,12 @@ twrap \- simple text wrapper utility
 .TP
 .BR \-l ", " \-\-line " " \fIline_number
 specifies how many character each line should have.
+.TP
+.BR \-f ", " \-\-force
+if the current line contains only one single long word longer than expected \fIline_number\fR then it forces the word to break (open new line)
+.TP
+.BR \-s ", " \-\-skip
+does not care about word proportion, if current line has exceeded the desired \fIline_number\fR
 
 .SH DESCRIPTION
 Wraps FILE or standard input when no FILE passed onto standard output.
