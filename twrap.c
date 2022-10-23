@@ -18,9 +18,6 @@ int main(int argc, char **argv)
     void *arg_line = NULL, *arg_force = NULL, *arg_skip;
     twrap_arg args[] = {
         {{"l", "line"}, ARG_VALUE, (void **)&arg_line},
-        /* if there's one single long word longer than expected arg_line 
-         * then it forces the word to break (open new line)
-         */
         {{"f", "force"}, ARG_TOGGLE, (void **)&arg_force},
         {{"s", "skip"}, ARG_TOGGLE, (void **)&arg_skip},
     };
