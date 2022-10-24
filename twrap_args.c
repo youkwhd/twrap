@@ -62,7 +62,7 @@ void twrap_args_init(const int argc, char **argv, twrap_arg *args, size_t args_s
 
 void twrap_args_free(twrap_arg *args, size_t args_size) 
 {
-    for (int i = 0; i < (int)args_size; i++)
+    for (size_t i = 0; i < args_size; i++)
          if (args[i].arg_type == ARG_TOGGLE && *args[i].arg_value_ptr != NULL)
              free(*args[i].arg_value_ptr);
 }
