@@ -7,27 +7,54 @@
 void twrap_args_init(const int argc, char **argv, twrap_arg *args, size_t args_size)
 {
     for (int i = 1; i < argc; i++) {
-        if (argv[i][0] != '-' || (argv[i][0] != '-' && argv[i][1] != '-'))
-            continue;
+        if (argv[i][0] == '-' && argv[i][1] == '-') {
+            char *val = argv[i];
+            while (*val == '-')
+                val++;
 
-        char *val = argv[i];
-        while (*val == '-')
-            val++;
-
-        for (int j = 0; j < (int)args_size; j++) {
-            for (int k = 0; k < 2; k++) {
-                if (args[j].valid_args[k] != NULL && strcmp(val, args[j].valid_args[k]) == 0) {
-                    if (args[j].arg_type == ARG_TOGGLE) {
-                        bool *ptr = malloc(sizeof *ptr);
-                        *ptr = true;
-                        *args[j].arg_value_ptr = (void *)ptr;
+            /* TODO: binary search
+             */
+            for (size_t j = 0; j < args_size; j++) {
+                if (args[j].valid_args[1] != NULL && strcmp(val, args[j].valid_args[1]) == 0) {
+                    if (args[j].arg_type == ARG_TOGGLE && *args[j].arg_value_ptr == NULL) {
+                        bool *tmp_ptr = malloc(sizeof *tmp_ptr);
+                        *tmp_ptr = true;
+                        *args[j].arg_value_ptr = (void *)tmp_ptr;
                     } else if (args[j].arg_type == ARG_VALUE) {
-                        *args[j].arg_value_ptr = argv[++i];
+                        *args[j].arg_value_ptr = argv[i + 1];
                     }
 
-                    j = args_size;
                     break;
                 }
+            }
+
+        } else if (argv[i][0] == '-') {
+            char *val = argv[i];
+            while (*val == '-')
+                val++;
+
+            size_t val_len = strlen(val), val_it = 0;
+            bool is_multiple_toggle = false;
+            while (val_it < val_len) {
+                const char flag[2] = {val[val_it], '\0'};
+
+                /* TODO: binary search
+                 */
+                for (size_t j = 0; j < args_size; j++) {
+                    if (args[j].valid_args[0] != NULL && strcmp(flag, args[j].valid_args[0]) == 0) {
+                        if (args[j].arg_type == ARG_TOGGLE && *args[j].arg_value_ptr == NULL) {
+                            bool *tmp_ptr = malloc(sizeof *tmp_ptr);
+                            *tmp_ptr = true, is_multiple_toggle = true;
+                            *args[j].arg_value_ptr = (void *)tmp_ptr;
+                        } else if (args[j].arg_type == ARG_VALUE && !is_multiple_toggle) {
+                            *args[j].arg_value_ptr = argv[i + 1];
+                        }
+
+                        break;
+                    }
+                }
+
+                val_it++;
             }
         }
     }

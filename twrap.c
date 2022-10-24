@@ -15,7 +15,7 @@ void twrap_free();
 
 int main(int argc, char **argv)
 {
-    void *arg_line = NULL, *arg_force = NULL, *arg_skip;
+    void *arg_line = NULL, *arg_force = NULL, *arg_skip = NULL;
     twrap_arg args[] = {
         {{"l", "line"}, ARG_VALUE, (void **)&arg_line},
         {{"f", "force"}, ARG_TOGGLE, (void **)&arg_force},
