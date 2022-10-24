@@ -17,9 +17,9 @@ int main(int argc, char **argv)
 {
     void *arg_line = NULL, *arg_force = NULL, *arg_skip = NULL;
     twrap_arg args[] = {
-        {{"l", "line"}, ARG_VALUE, (void **)&arg_line},
-        {{"f", "force"}, ARG_TOGGLE, (void **)&arg_force},
-        {{"s", "skip"}, ARG_TOGGLE, (void **)&arg_skip},
+        {{"l", "line"}, ARG_VALUE, &arg_line},
+        {{"f", "force"}, ARG_TOGGLE, &arg_force},
+        {{"s", "skip"}, ARG_TOGGLE, &arg_skip},
     };
 
     twrap_args_init(argc, argv, args, ARR_SIZE(args));
