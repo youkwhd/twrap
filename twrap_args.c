@@ -6,6 +6,9 @@
 
 void twrap_args_init(const int argc, char **argv, twrap_arg *args, size_t args_size)
 {
+    for (size_t i = 0; i < args_size; i++)
+        *args[i].arg_value_ptr = NULL;
+
     for (int i = 1; i < argc; i++) {
         if (argv[i][0] == '-' && argv[i][1] == '-') {
             char *val = argv[i];
