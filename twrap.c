@@ -4,55 +4,55 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "twrap_buf.h"
-#include "twrap_args.h"
+#include "buf.h"
+#include "args.h"
 
 #define ARR_SIZE(arr) sizeof arr / sizeof *arr
 
-size_t twrap_str_wordlen(const char *word);
-void twrap_init(FILE *fp);
-void twrap_free();
+size_t str_wordlen(const char *word);
 
 int main(int argc, char **argv)
 {
     void *arg_line, *arg_force, *arg_skip;
-    twrap_arg args[] = {
+    arg args[] = {
         {{"l", "line"}, ARG_VALUE, &arg_line},
         {{"f", "force"}, ARG_TOGGLE, &arg_force},
         {{"s", "skip"}, ARG_TOGGLE, &arg_skip},
     };
 
-    twrap_args_init(argc, argv, args, ARR_SIZE(args));
-    twrap_init(stdin);
+    args_init(argc, argv, args, ARR_SIZE(args));
+    buf_init();
+    buf_read();
 
     const size_t COUNT_ALPHABET_MAX = arg_line ? atoi(arg_line) : 65;
-    for (size_t i = 0, count = 0; twrap_gbuf->buf[i] != '\0'; i++) {
-        bool count_reset = twrap_gbuf->buf[i] == '\n' ? true : false;
+    for (size_t i = 0, count = 0; gbuf->buf[i] != '\0'; i++) {
+        bool count_reset = gbuf->buf[i] == '\n' ? true : false;
 
         if (arg_force || arg_skip)
             if (count >= COUNT_ALPHABET_MAX) {
-                if (twrap_gbuf->buf[i] != '\n') 
+                if (gbuf->buf[i] != '\n') 
                     putchar('\n');
 
                 count_reset = true;
             }
 
         if (!arg_skip)
-            if (twrap_gbuf->buf[i] == ' ' && count + (twrap_str_wordlen(&twrap_gbuf->buf[i + 1]) + 1) >= COUNT_ALPHABET_MAX) {
-                twrap_gbuf->buf[i] = '\n';
+            if (gbuf->buf[i] == ' ' && count + (str_wordlen(&gbuf->buf[i + 1]) + 1) >= COUNT_ALPHABET_MAX) {
+                gbuf->buf[i] = '\n';
                 count_reset = true;
             }
 
-        putchar(twrap_gbuf->buf[i]);
+        putchar(gbuf->buf[i]);
         count_reset ? count = 0 : count++;
     }
 
-    twrap_args_free(args, ARR_SIZE(args));
-    twrap_free();
+
+    args_free(args, ARR_SIZE(args));
+    buf_free();
     return 0;
 }
 
-size_t twrap_str_wordlen(const char *word)
+size_t str_wordlen(const char *word)
 {
     size_t length = 0;
 
@@ -61,22 +61,4 @@ size_t twrap_str_wordlen(const char *word)
             break;
 
     return length;
-}
-
-void twrap_init(FILE *fp)
-{
-    twrap_buf_init();
-
-    char c;
-    while ((c = fgetc(fp)) != EOF) {
-        if (twrap_gbuf->size > twrap_gbuf->bytes)
-            twrap_buf_grow();
-
-        twrap_gbuf->buf[twrap_gbuf->size++] = c;
-    }
-}
-
-void twrap_free()
-{
-    twrap_buf_free();
 }
