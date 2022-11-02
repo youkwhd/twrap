@@ -15,17 +15,22 @@ int main(int argc, char **argv)
 {
     void *arg_line, *arg_force, *arg_skip;
     arg args[] = {
-        {{"l", "line"}, ARG_VALUE, &arg_line},
-        {{"f", "force"}, ARG_TOGGLE, &arg_force},
-        {{"s", "skip"}, ARG_TOGGLE, &arg_skip},
+        {{"l", "line"}, ARG_VALUE, &arg_line},      /* how many ASCII code(s) is permitted in a single line */
+        {{"f", "force"}, ARG_TOGGLE, &arg_force},   /* force single word to break up into new line */
+        {{"s", "skip"}, ARG_TOGGLE, &arg_skip},     /* skip word proportion, break up into new line if met COUNT_ALPHABET_MAX */
     };
 
     args_init(argc, argv, args, ARR_SIZE(args));
     buf_init();
     buf_read();
 
+    /* how many ASCII code(s) is permitted in a single line
+     */
     const size_t COUNT_ALPHABET_MAX = arg_line ? atoi(arg_line) : 65;
+
     for (size_t i = 0, count = 0; gbuf->buf[i] != '\0'; i++) {
+        /* if new line occurs then re-count alphabets
+         */
         bool count_reset = gbuf->buf[i] == '\n' ? true : false;
 
         if (arg_force || arg_skip)
