@@ -25,7 +25,7 @@ void buf_fread(FILE *fp)
 
 void buf_grow()
 {
-    int grow_multiplier = 1;
+    size_t grow_multiplier = 1;
 
     while ((gbuf->bytes * grow_multiplier) <= gbuf->size)
         grow_multiplier++;
