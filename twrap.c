@@ -28,7 +28,7 @@ int main(int argc, char **argv)
      */
     const size_t COUNT_ALPHABET_MAX = arg_line ? atoi(arg_line) : 65;
 
-    for (size_t i = 0, count = 0; gbuf->buf[i] != '\0'; i++) {
+    for (size_t i = 0, count = 1; gbuf->buf[i] != '\0'; i++) {
         /* if new line occurs then re-count alphabets
          */
         bool count_reset = gbuf->buf[i] == '\n' ? true : false;
@@ -48,7 +48,7 @@ int main(int argc, char **argv)
             }
 
         putchar(gbuf->buf[i]);
-        count_reset ? count = 0 : count++;
+        count_reset ? count = 1 : count++;
     }
 
 
