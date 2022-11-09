@@ -21,39 +21,40 @@ int main(int argc, char **argv)
     };
 
     args_init(argc, argv, args, ARR_SIZE(args));
-    buf_init();
-    buf_read();
+
+    buf *buf_stdin = buf_init();
+    buf_read(buf_stdin);
 
     /* how many ASCII code(s) is permitted in a single line
      */
     const size_t COUNT_ALPHABET_MAX = arg_line ? atoi(arg_line) : 65;
 
-    for (size_t i = 0, count = 1; gbuf->buf[i] != '\0'; i++) {
+    for (size_t i = 0, count = 1; buf_stdin->buf[i] != '\0'; i++) {
         /* if new line occurs then re-count alphabets
          */
-        bool count_reset = gbuf->buf[i] == '\n' ? true : false;
+        bool count_reset = buf_stdin->buf[i] == '\n' ? true : false;
 
         if (arg_force || arg_skip)
             if (count >= COUNT_ALPHABET_MAX) {
-                if (gbuf->buf[i] != '\n') 
+                if (buf_stdin->buf[i] != '\n') 
                     putchar('\n');
 
                 count_reset = true;
             }
 
         if (!arg_skip)
-            if (gbuf->buf[i] == ' ' && count + (str_wordlen(&gbuf->buf[i + 1]) + 1) >= COUNT_ALPHABET_MAX) {
-                gbuf->buf[i] = '\n';
+            if (buf_stdin->buf[i] == ' ' && count + (str_wordlen(&buf_stdin->buf[i + 1]) + 1) >= COUNT_ALPHABET_MAX) {
+                buf_stdin->buf[i] = '\n';
                 count_reset = true;
             }
 
-        putchar(gbuf->buf[i]);
+        putchar(buf_stdin->buf[i]);
         count_reset ? count = 1 : count++;
     }
 
 
     args_free(args, ARR_SIZE(args));
-    buf_free();
+    buf_free(buf_stdin);
     return 0;
 }
 
