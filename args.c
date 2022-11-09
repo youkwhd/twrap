@@ -21,6 +21,8 @@ void args_parseld(const int argc, char **argv, arg *args, size_t args_size)
             if (args[j].valid_args[1] != NULL && strcmp(val, args[j].valid_args[1]) == 0) {
                 switch (args[j].arg_type) {
                 case ARG_TOGGLE:
+                    /* prevents memory leaks
+                     */
                     if (*args[j].arg_value_ptr != NULL)
                         break;
 
@@ -59,6 +61,8 @@ void args_parsesd(const int argc, char **argv, arg *args, size_t args_size)
                 if (args[j].valid_args[0] != NULL && strcmp(flag, args[j].valid_args[0]) == 0) {
                     switch (args[j].arg_type) {
                     case ARG_TOGGLE:
+                        /* prevents memory leaks
+                         */
                         if (*args[j].arg_value_ptr != NULL)
                             goto endloop;
 
@@ -67,6 +71,11 @@ void args_parsesd(const int argc, char **argv, arg *args, size_t args_size)
                         *args[j].arg_value_ptr = (void *)tmp_ptr;
                         break;
                     case ARG_VALUE:
+                        /* possible arg that has value 
+                         * misplaced with multiple toggle args
+                         *
+                         * this only occurs on single dash arguments
+                         */
                         if (is_multiple_toggle)
                             goto endloop;
 
