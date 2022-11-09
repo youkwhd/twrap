@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stddef.h>
 
-#define buf_read() buf_fread(stdin)
+#define buf_read(buffer) buf_fread(buffer, stdin)
 
 typedef struct buf {
     char *buf;
@@ -12,25 +12,20 @@ typedef struct buf {
     size_t bytes;
 } buf;
 
-/* twrap global buffer
- * allocated after buf_init() called
- */
-extern buf *gbuf;
-
 /* allocates gbuf
  */
-void buf_init();
+buf *buf_init();
 
 /* reads FILE 
  */
-void buf_fread(FILE *fp);
+void buf_fread(buf *buffer, FILE *fp);
 
 /* grow the size of gbuf
  */
-void buf_grow();
+void buf_grow(buf *buffer);
+
 /* free the memory of gbuf
  */
-void buf_free();
-
+void buf_free(buf *buffer);
 
 #endif

@@ -2,40 +2,40 @@
 
 #include "buf.h"
 
-buf *gbuf;
-
-void buf_init()
+buf *buf_init()
 {
-    gbuf = malloc(sizeof *gbuf);
-    gbuf->bytes = (sizeof *gbuf->buf) * 2048;
-    gbuf->buf = malloc(gbuf->bytes);
-    gbuf->size = 0;
+    buf *buffer = malloc(sizeof *buffer);
+    buffer->bytes = (sizeof *buffer->buf) * 2048;
+    buffer->buf = malloc(buffer->bytes);
+    buffer->size = 0;
+
+    return buffer;
 }
 
-void buf_fread(FILE *fp)
+void buf_fread(buf *buffer, FILE *fp)
 {
     char c;
     while ((c = fgetc(fp)) != EOF) {
-        if (gbuf->size > gbuf->bytes)
-            buf_grow();
+        if (buffer->size > buffer->bytes)
+            buf_grow(buffer);
 
-        gbuf->buf[gbuf->size++] = c;
+        buffer->buf[buffer->size++] = c;
     }
 }
 
-void buf_grow()
+void buf_grow(buf *buffer)
 {
     size_t grow_multiplier = 1;
 
-    while ((gbuf->bytes * grow_multiplier) <= gbuf->size)
+    while ((buffer->bytes * grow_multiplier) <= buffer->size)
         grow_multiplier++;
 
-    gbuf->bytes = ((sizeof *gbuf->buf) * (gbuf->size * grow_multiplier));
-    gbuf->buf = realloc(gbuf->buf, gbuf->bytes);
+    buffer->bytes = ((sizeof *buffer->buf) * (buffer->size * grow_multiplier));
+    buffer->buf = realloc(buffer->buf, buffer->bytes);
 }
 
-void buf_free()
+void buf_free(buf *buffer)
 {
-    free(gbuf->buf);
-    free(gbuf);
+    free(buffer->buf);
+    free(buffer);
 }
