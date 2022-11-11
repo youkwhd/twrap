@@ -5,3 +5,5 @@ simple (t)ext (wrap)per utility to wrap ASCII characters.
 
 a sample use case for this utility is this README and each every
 ASCII text-based README's on my github.
+
+see twrap(1)
