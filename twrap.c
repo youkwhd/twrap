@@ -5,11 +5,10 @@
 #include <stdbool.h>
 
 #include "buf.h"
+#include "str.h"
 #include "args.h"
 
 #define ARR_SIZE(arr) sizeof arr / sizeof *arr
-
-size_t str_wordlen(const char *word);
 
 int main(int argc, char **argv)
 {
@@ -56,15 +55,4 @@ int main(int argc, char **argv)
     args_free(args, ARR_SIZE(args));
     buf_free(buf_stdin);
     return 0;
-}
-
-size_t str_wordlen(const char *word)
-{
-    size_t length = 0;
-
-    for (; *word; word++, length++)
-        if (*word == ' ' || *word == '\n')
-            break;
-
-    return length;
 }
