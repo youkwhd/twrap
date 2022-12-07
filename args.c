@@ -18,24 +18,25 @@ void args_parseld(const int argc, char **argv, arg *args, size_t args_size)
         /* TODO: binary search
         */
         for (size_t j = 0; j < args_size; j++) {
-            if (args[j].valid_args[1] != NULL && strcmp(val, args[j].valid_args[1]) == 0) {
-                switch (args[j].arg_type) {
-                case ARG_TOGGLE:
-                    /* prevents memory leaks
-                     */
-                    if (*args[j].arg_value_ptr != NULL)
-                        break;
+            if (args[j].valid_args[1] == NULL && strcmp(val, args[j].valid_args[1]) != 0)
+                continue;
 
-                    bool *tmp_ptr = malloc(sizeof *tmp_ptr);
-                    *tmp_ptr = true;
-                    *args[j].arg_value_ptr = (void *)tmp_ptr;
+            switch (args[j].arg_type) {
+            case ARG_TOGGLE:
+                /* prevents memory leaks
+                 */
+                if (*args[j].arg_value_ptr != NULL)
                     break;
-                case ARG_VALUE:
-                    *args[j].arg_value_ptr = argv[++i];
-                    break;
-                }
+
+                bool *tmp_ptr = malloc(sizeof *tmp_ptr);
+                *tmp_ptr = true;
+                *args[j].arg_value_ptr = (void *)tmp_ptr;
+                break;
+            case ARG_VALUE:
+                *args[j].arg_value_ptr = argv[++i];
                 break;
             }
+            break;
         }
     }
 }
@@ -58,33 +59,37 @@ void args_parsesd(const int argc, char **argv, arg *args, size_t args_size)
             /* TODO: binary search
              */
             for (size_t j = 0; j < args_size; j++) {
-                if (args[j].valid_args[0] != NULL && strcmp(flag, args[j].valid_args[0]) == 0) {
-                    switch (args[j].arg_type) {
-                    case ARG_TOGGLE:
-                        /* prevents memory leaks
-                         */
-                        if (*args[j].arg_value_ptr != NULL)
-                            goto endloop;
+                if (args[j].valid_args[0] == NULL && strcmp(flag, args[j].valid_args[0]) != 0)
+                    continue;
 
-                        bool *tmp_ptr = malloc(sizeof *tmp_ptr);
-                        *tmp_ptr = true, is_multiple_toggle = true;
-                        *args[j].arg_value_ptr = (void *)tmp_ptr;
-                        break;
-                    case ARG_VALUE:
-                        /* possible arg that has value 
-                         * misplaced with multiple toggle args
-                         *
-                         * this only occurs on single dash arguments
-                         */
-                        if (is_multiple_toggle)
-                            goto endloop;
+                switch (args[j].arg_type) {
+                case ARG_TOGGLE:
+                    /* prevents memory leaks
+                     */
+                    if (*args[j].arg_value_ptr != NULL)
+                        goto endloop;
 
-                        *args[j].arg_value_ptr = argv[++i];
-                        break;
-                    }
-endloop:
+                    bool *tmp_ptr = malloc(sizeof *tmp_ptr);
+                    *tmp_ptr = true, is_multiple_toggle = true;
+                    *args[j].arg_value_ptr = (void *)tmp_ptr;
+                    break;
+                case ARG_VALUE:
+                    /* possible arg that has value 
+                     * misplaced with multiple toggle args
+                     *
+                     * this only occurs on single dash arguments
+                     */
+                    if (is_multiple_toggle)
+                        goto endloop;
+
+                    *args[j].arg_value_ptr = argv[++i];
                     break;
                 }
+/* this breaks the for loop
+ * not the switch statement
+ */
+endloop:
+                break;
             }
 
             val_it++;
