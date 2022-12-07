@@ -53,6 +53,7 @@ void args_parsesd(const int argc, char **argv, arg *args, size_t args_size)
 
         size_t val_len = strlen(val), val_it = 0;
         bool is_multiple_toggle = false;
+
         while (val_it < val_len) {
             const char flag[2] = {val[val_it], '\0'};
 
