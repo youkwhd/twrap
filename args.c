@@ -5,7 +5,7 @@
 
 #include "args.h"
 
-void args_parse_longg(const int argc, char **argv, arg *args, size_t args_size)
+void args_parse_long(const int argc, char **argv, arg *args, size_t args_size)
 {
     for (int i = 1; i < argc; i++) {
         if (argv[i][0] != '-' && argv[i][1] != '-')
@@ -103,8 +103,8 @@ void args_init(const int argc, char **argv, arg *args, size_t args_size)
     for (size_t i = 0; i < args_size; i++)
         *args[i].arg_value_ptr = NULL;
 
-    args_parsesd(argc, argv, args, args_size);
-    args_parseld(argc, argv, args, args_size);
+    args_parse_short(argc, argv, args, args_size);
+    args_parse_long(argc, argv, args, args_size);
 }
 
 void args_free(arg *args, size_t args_size) 
