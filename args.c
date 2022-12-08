@@ -5,7 +5,7 @@
 
 #include "args.h"
 
-void args_parseld(const int argc, char **argv, arg *args, size_t args_size)
+void args_parse_longg(const int argc, char **argv, arg *args, size_t args_size)
 {
     for (int i = 1; i < argc; i++) {
         if (argv[i][0] != '-' && argv[i][1] != '-')
@@ -15,8 +15,6 @@ void args_parseld(const int argc, char **argv, arg *args, size_t args_size)
         while (*val == '-')
             val++;
 
-        /* TODO: binary search
-        */
         for (size_t j = 0; j < args_size; j++) {
             if (args[j].valid_args[1] == NULL && strcmp(val, args[j].valid_args[1]) != 0)
                 continue;
@@ -41,7 +39,7 @@ void args_parseld(const int argc, char **argv, arg *args, size_t args_size)
     }
 }
 
-void args_parsesd(const int argc, char **argv, arg *args, size_t args_size)
+void args_parse_short(const int argc, char **argv, arg *args, size_t args_size)
 {
     for (int i = 1; i < argc; i++) {
         if (argv[i][0] != '-')
@@ -54,11 +52,13 @@ void args_parsesd(const int argc, char **argv, arg *args, size_t args_size)
         size_t val_len = strlen(val), val_it = 0;
         bool is_multiple_toggle = false;
 
+        /* since we are parsing
+         * short arguments with multiple flags
+         * in a single dash, cut and parse it character-by-character.
+         */
         while (val_it < val_len) {
             const char flag[2] = {val[val_it], '\0'};
 
-            /* TODO: binary search
-             */
             for (size_t j = 0; j < args_size; j++) {
                 if (args[j].valid_args[0] == NULL && strcmp(flag, args[j].valid_args[0]) != 0)
                     continue;
