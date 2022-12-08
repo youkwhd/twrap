@@ -53,8 +53,8 @@ void args_parse_short(const int argc, char **argv, arg *args, size_t args_size)
         bool is_multiple_toggle = false;
 
         /* since we are parsing
-         * short arguments with multiple flags
-         * in a single dash, cut and parse it character-by-character.
+         * short arguments with multiple flags in a single dash,
+         * cut and parse it character-by-character.
          */
         while (val_it < val_len) {
             const char flag[2] = {val[val_it], '\0'};
