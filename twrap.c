@@ -14,14 +14,18 @@
 
 int main(int argc, char **argv)
 {
-    void *arg_line, *arg_force, *arg_skip;
+    void *arg_line, *arg_force, *arg_skip, *arg_debug_args;
     arg args[] = {
-        {{"l", "line"}, ARG_VALUE_STR, &arg_line},              /* how many ASCII code(s) is permitted in a single line */
-        {{"f", "force"}, ARG_VALUE_BOOL_TOGGLE, &arg_force},    /* force single word to break up into new line */
-        {{"s", "skip"}, ARG_VALUE_BOOL_TOGGLE, &arg_skip},      /* skip word proportion, break up into new line if met COUNT_ALPHABET_MAX */
+        {{"l", "line"}, ARG_VALUE_STR, &arg_line},                          /* how many ASCII code(s) is permitted in a single line */
+        {{"f", "force"}, ARG_VALUE_BOOL_TOGGLE, &arg_force},                /* force single word to break up into new line */
+        {{"s", "skip"}, ARG_VALUE_BOOL_TOGGLE, &arg_skip},                  /* skip word proportion, break up into new line if met COUNT_ALPHABET_MAX */
+        {{NULL, "debug-args"}, ARG_VALUE_BOOL_TOGGLE, &arg_debug_args},     /* toggle on debugging for arguments */
     };
 
     args_init(argc, argv, args, ARR_SIZE(args));
+
+    if (arg_debug_args)
+        __args_debug(args, ARR_SIZE(args));
 
     buf *buf_stdin = buf_init();
     buf_read(buf_stdin);
