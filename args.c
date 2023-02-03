@@ -96,6 +96,9 @@ void args_parse_short(const int argc, char **argv, arg *args, size_t args_size)
 
 void args_init(const int argc, char **argv, arg *args, size_t args_size)
 {
+    /* TODO: initial based off type,
+     * so __args_debug can interpret
+     */
     for (size_t i = 0; i < args_size; i++)
         *args[i].arg_value_ptr = NULL;
 
@@ -114,7 +117,13 @@ void __args_debug(arg *args, size_t args_size)
 {
     for (size_t i = 0; i < args_size; i++) {
         if (*args[i].arg_value_ptr) {
-            printf("[ARGS_DEBUG] %s -> ", *args[i].valid_args);
+            /* TODO: simplify flag search,
+             * prioritize long flag
+             */
+            char **flag = args[i].valid_args;
+            for (; *flag == NULL; flag++);
+
+            printf("[ARGS_DEBUG] %s -> ", *flag);
 
             switch (args[i].arg_value_type) {
             case ARG_VALUE_STR:
@@ -126,4 +135,6 @@ void __args_debug(arg *args, size_t args_size)
             }
         }
     }
+
+    putchar('\n');
 }
