@@ -4,19 +4,20 @@
 #include <stdbool.h>
 
 #include "args.h"
+#include "str.h"
 
 void args_parse_long(const int argc, char **argv, arg *args, size_t args_size)
 {
+    const int ARG_DASH_COUNT = 2;
+
     for (int i = 1; i < argc; i++) {
-        if (argv[i][0] != '-' && argv[i][1] != '-')
+        if (str_firstch(argv[i], '-') != ARG_DASH_COUNT)
             continue;
 
-        char *val = argv[i];
-        while (*val == '-')
-            val++;
+        char *val = argv[i] + ARG_DASH_COUNT;
 
         for (size_t j = 0; j < args_size; j++) {
-            if (args[j].valid_args[1] == NULL && strcmp(val, args[j].valid_args[1]) != 0)
+            if (args[j].valid_args[1] != NULL && strcmp(val, args[j].valid_args[1]) != 0)
                 continue;
 
             switch (args[j].arg_type) {
@@ -34,6 +35,7 @@ void args_parse_long(const int argc, char **argv, arg *args, size_t args_size)
                 *args[j].arg_value_ptr = argv[++i];
                 break;
             }
+
             break;
         }
     }
@@ -41,14 +43,13 @@ void args_parse_long(const int argc, char **argv, arg *args, size_t args_size)
 
 void args_parse_short(const int argc, char **argv, arg *args, size_t args_size)
 {
+    const int ARG_DASH_COUNT = 1;
+
     for (int i = 1; i < argc; i++) {
-        if (argv[i][0] != '-')
+        if (str_firstch(argv[i], '-') != ARG_DASH_COUNT)
             continue;
 
-        char *val = argv[i];
-        while (*val == '-')
-            val++;
-
+        char *val = argv[i] + ARG_DASH_COUNT;
         size_t val_len = strlen(val), val_it = 0;
         bool is_multiple_toggle = false;
 
@@ -60,7 +61,7 @@ void args_parse_short(const int argc, char **argv, arg *args, size_t args_size)
             const char flag[2] = {val[val_it], '\0'};
 
             for (size_t j = 0; j < args_size; j++) {
-                if (args[j].valid_args[0] == NULL && strcmp(flag, args[j].valid_args[0]) != 0)
+                if (args[j].valid_args[0] != NULL && strcmp(flag, args[j].valid_args[0]) != 0)
                     continue;
 
                 switch (args[j].arg_type) {
@@ -86,11 +87,13 @@ void args_parse_short(const int argc, char **argv, arg *args, size_t args_size)
                     *args[j].arg_value_ptr = argv[++i];
                     break;
                 }
+
 /* this breaks the for loop
- * not the switch statement
- */
+* not the switch statement
+*/
 endloop:
                 break;
+
             }
 
             val_it++;
@@ -112,4 +115,22 @@ void args_free(arg *args, size_t args_size)
     for (size_t i = 0; i < args_size; i++)
          if (args[i].arg_type == ARG_TOGGLE && *args[i].arg_value_ptr != NULL)
              free(*args[i].arg_value_ptr);
+}
+
+void __args_debug(arg *args, size_t args_size)
+{
+    for (size_t i = 0; i < args_size; i++) {
+        if (*args[i].arg_value_ptr) {
+            printf("[ARGS_DEBUG] %s -> ", *args[i].valid_args);
+
+            switch (args[i].arg_type) {
+            case ARG_VALUE:
+                puts((char *)*args[i].arg_value_ptr);
+                break;
+            case ARG_TOGGLE:
+                puts(*((bool *)*args[i].arg_value_ptr) ? "<true>" : "<false>");
+                break;
+            }
+        }
+    }
 }

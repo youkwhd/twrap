@@ -16,5 +16,6 @@ typedef struct arg {
 
 void args_init(const int argc, char **argv, arg *args, size_t args_size);
 void args_free(arg *args, size_t args_size);
+void __args_debug(arg *args, size_t args_size);
 
 #endif
