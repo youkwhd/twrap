@@ -5,7 +5,7 @@
 buf *buf_init()
 {
     buf *buffer = malloc(sizeof *buffer);
-    buffer->bytes = (sizeof *buffer->buf) * 2048;
+    buffer->bytes = (sizeof *buffer->buf) * BUF_INITIAL_SIZE;
     buffer->buf = malloc(buffer->bytes);
     buffer->size = 0;
 

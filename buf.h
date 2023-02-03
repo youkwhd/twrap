@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stddef.h>
 
+#define BUF_INITIAL_SIZE 2048
+
 #define buf_read(buffer) buf_fread(buffer, stdin)
 
 typedef struct buf {
