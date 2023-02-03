@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "str.h"
 
 size_t str_wordlen(const char *word)
@@ -9,4 +10,14 @@ size_t str_wordlen(const char *word)
             break;
 
     return length;
+}
+
+size_t str_firstch(const char *str, char ch)
+{
+    size_t count = 0;
+
+    for (; *str == ch; str++)
+        count++;
+
+    return count;
 }
