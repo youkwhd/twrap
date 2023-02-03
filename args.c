@@ -8,7 +8,7 @@
 
 void args_parse_long(const int argc, char **argv, arg *args, size_t args_size)
 {
-    const int ARG_DASH_COUNT = 2;
+    const size_t ARG_DASH_COUNT = 2;
 
     for (int i = 1; i < argc; i++) {
         if (str_firstch(argv[i], '-') != ARG_DASH_COUNT)
@@ -43,7 +43,7 @@ void args_parse_long(const int argc, char **argv, arg *args, size_t args_size)
 
 void args_parse_short(const int argc, char **argv, arg *args, size_t args_size)
 {
-    const int ARG_DASH_COUNT = 1;
+    const size_t ARG_DASH_COUNT = 1;
 
     for (int i = 1; i < argc; i++) {
         if (str_firstch(argv[i], '-') != ARG_DASH_COUNT)
