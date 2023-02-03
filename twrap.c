@@ -10,6 +10,8 @@
 
 #define ARR_SIZE(arr) sizeof arr / sizeof *arr
 
+#define ARG_LINE_DEFAULT 65
+
 int main(int argc, char **argv)
 {
     void *arg_line, *arg_force, *arg_skip;
@@ -20,13 +22,14 @@ int main(int argc, char **argv)
     };
 
     args_init(argc, argv, args, ARR_SIZE(args));
+    __args_debug(args, ARR_SIZE(args));
 
     buf *buf_stdin = buf_init();
     buf_read(buf_stdin);
 
     /* how many ASCII code(s) is permitted in a single line
      */
-    const size_t COUNT_ALPHABET_MAX = arg_line ? atoi(arg_line) : 65;
+    const size_t COUNT_ALPHABET_MAX = arg_line ? atoi(arg_line) : ARG_LINE_DEFAULT;
 
     for (size_t i = 0, count = 1; buf_stdin->buf[i] != '\0'; i++) {
         /* if new line occurs then re-count alphabets
