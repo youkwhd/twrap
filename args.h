@@ -8,6 +8,7 @@
 
 typedef enum arg_val_type {
     ARG_VALUE_STR,
+    ARG_VALUE_BOOL,
     ARG_VALUE_BOOL_TOGGLE
 } arg_val_type;
 
