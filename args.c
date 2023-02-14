@@ -6,6 +6,8 @@
 #include "args.h"
 #include "str.h"
 
+#define ARR_SIZE(arr) sizeof arr / sizeof *arr
+
 arg *args_find_arg(arg *args, size_t args_size, const char *arg_flag, arg_type arg_type)
 {
     for (size_t i = 0; i < args_size; i++)
@@ -109,9 +111,7 @@ void args_free(arg *args, size_t args_size)
 void __args_debug(arg *args, size_t args_size)
 {
     for (size_t i = 0; i < args_size; i++) {
-        /* + 1 since valid_args's max slot is 2
-         */
-        char **flag = args[i].valid_args + 1;
+        char **flag = args[i].valid_args + (ARR_SIZE(args[i].valid_args) - 1);
         for (; *flag == NULL; flag--);
 
         printf("[ARGS_DEBUG] %s -> ", *flag);
