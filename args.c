@@ -29,14 +29,7 @@ void args_parse_long(const int argc, char **argv, arg *args, size_t args_size)
 
         switch (arg_target->arg_value_type) {
         case ARG_VALUE_BOOL_TOGGLE:
-            /* prevents memory leaks
-             */
-            if (*arg_target->arg_value_ptr != NULL)
-                break;
-
-            bool *tmp_ptr = malloc(sizeof *tmp_ptr);
-            *tmp_ptr = true;
-            *arg_target->arg_value_ptr = (void *)tmp_ptr;
+            *(bool *)*arg_target->arg_value_ptr = !*(bool *)*arg_target->arg_value_ptr;
             break;
         case ARG_VALUE_STR:
             *arg_target->arg_value_ptr = argv[++i];
@@ -67,14 +60,8 @@ void args_parse_short(const int argc, char **argv, arg *args, size_t args_size)
 
             switch (arg_target->arg_value_type) {
             case ARG_VALUE_BOOL_TOGGLE:
-                /* prevents memory leaks
-                 */
-                if (*arg_target->arg_value_ptr != NULL)
-                    break;
-
-                bool *tmp_ptr = malloc(sizeof *tmp_ptr);
-                *tmp_ptr = true, is_multiple_toggle = true;
-                *arg_target->arg_value_ptr = (void *)tmp_ptr;
+                is_multiple_toggle = true;
+                *(bool *)*arg_target->arg_value_ptr = !*(bool *)*arg_target->arg_value_ptr;
                 break;
             case ARG_VALUE_STR:
                 /* possible arg that has value 
@@ -96,11 +83,17 @@ void args_parse_short(const int argc, char **argv, arg *args, size_t args_size)
 
 void args_init(const int argc, char **argv, arg *args, size_t args_size)
 {
-    /* TODO: initial based off type,
-     * so __args_debug can interpret
-     */
-    for (size_t i = 0; i < args_size; i++)
-        *args[i].arg_value_ptr = NULL;
+    for (size_t i = 0; i < args_size; i++) {
+        switch (args[i].arg_value_type) {
+        case ARG_VALUE_BOOL_TOGGLE:
+            *args[i].arg_value_ptr = malloc(sizeof(bool));
+            *(bool *)*args[i].arg_value_ptr = false;
+            break;
+        case ARG_VALUE_STR:
+            *args[i].arg_value_ptr = NULL;
+            break;
+        }
+    }
 
     args_parse_short(argc, argv, args, args_size);
     args_parse_long(argc, argv, args, args_size);
@@ -109,30 +102,27 @@ void args_init(const int argc, char **argv, arg *args, size_t args_size)
 void args_free(arg *args, size_t args_size) 
 {
     for (size_t i = 0; i < args_size; i++)
-         if (args[i].arg_value_type == ARG_VALUE_BOOL_TOGGLE && *args[i].arg_value_ptr != NULL)
+         if (args[i].arg_value_type == ARG_VALUE_BOOL_TOGGLE)
              free(*args[i].arg_value_ptr);
 }
 
 void __args_debug(arg *args, size_t args_size)
 {
     for (size_t i = 0; i < args_size; i++) {
-        if (*args[i].arg_value_ptr) {
-            /* TODO: simplify flag search,
-             * prioritize long flag
-             */
-            char **flag = args[i].valid_args;
-            for (; *flag == NULL; flag++);
+        /* + 1 since valid_args's max slot is 2
+         */
+        char **flag = args[i].valid_args + 1;
+        for (; *flag == NULL; flag--);
 
-            printf("[ARGS_DEBUG] %s -> ", *flag);
+        printf("[ARGS_DEBUG] %s -> ", *flag);
 
-            switch (args[i].arg_value_type) {
-            case ARG_VALUE_STR:
-                puts((char *)*args[i].arg_value_ptr);
-                break;
-            case ARG_VALUE_BOOL_TOGGLE:
-                puts(*((bool *)*args[i].arg_value_ptr) ? "<true>" : "<false>");
-                break;
-            }
+        switch (args[i].arg_value_type) {
+        case ARG_VALUE_STR:
+            puts((char *)*args[i].arg_value_ptr ? (char *)*args[i].arg_value_ptr : "NULL");
+            break;
+        case ARG_VALUE_BOOL_TOGGLE:
+            puts(*((bool *)*args[i].arg_value_ptr) ? "true" : "false");
+            break;
         }
     }
 

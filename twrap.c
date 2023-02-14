@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 
     args_init(argc, argv, args, ARR_SIZE(args));
 
-    if (arg_debug_args)
+    if (*(bool *)arg_debug_args)
         __args_debug(args, ARR_SIZE(args));
 
     buf *buf_stdin = buf_init();
@@ -39,7 +39,7 @@ int main(int argc, char **argv)
          */
         bool count_reset = buf_stdin->content[i] == '\n' ? true : false;
 
-        if (arg_force || arg_skip)
+        if (*(bool *)arg_force || *(bool *)arg_skip)
             if (count >= COUNT_ALPHABET_MAX) {
                 if (buf_stdin->content[i] != '\n') 
                     putchar('\n');
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
                 count_reset = true;
             }
 
-        if (!arg_skip)
+        if (!*(bool *)arg_skip)
             if (buf_stdin->content[i] == ' ' && count + (str_wordlen(&buf_stdin->content[i + 1]) + 1) >= COUNT_ALPHABET_MAX) {
                 buf_stdin->content[i] = '\n';
                 count_reset = true;
