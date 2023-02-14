@@ -9,7 +9,7 @@
 #define buf_read(buffer) buf_fread(buffer, stdin)
 
 typedef struct buf {
-    char *buf;
+    char *content;
     size_t size;
     size_t bytes;
 } buf;
