@@ -26,8 +26,8 @@ void args_parse_long(const int argc, char **argv, arg *args, size_t args_size)
         if (str_firstch(argv[i], '-') != ARG_DASH_COUNT)
             continue;
 
-        char *val = argv[i] + ARG_DASH_COUNT;
-        arg *arg_target = args_find_arg_long(args, args_size, val);
+        char *flag = argv[i] + ARG_DASH_COUNT;
+        arg *arg_target = args_find_arg_long(args, args_size, flag);
 
         switch (arg_target->arg_value_type) {
         case ARG_VALUE_BOOL_TOGGLE:
