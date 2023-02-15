@@ -21,6 +21,12 @@ void buf_fread(buf *buffer, FILE *fp)
 
         buffer->content[buffer->size++] = c;
     }
+
+    /* fix: windows for some reason does not
+     * translate null terminator
+     */
+    if (buffer->content[buffer->size] != '\0')
+        buffer->content[buffer->size++] = '\0';
 }
 
 void buf_grow(buf *buffer)
