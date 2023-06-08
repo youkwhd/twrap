@@ -63,7 +63,7 @@ int main(int argc, char **argv)
         count++;
     }
 
-    if (*(bool *)arg_debug_args)
+    if (*arg_debug_args)
         putchar('\n'), __args_debug(args, ARR_SIZE(args));
 
     args_free(args, ARR_SIZE(args));
