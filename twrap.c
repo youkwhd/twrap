@@ -45,12 +45,12 @@ int main(int argc, char **argv)
         if (buf_stdin->content[i] == '\n')
             i++, count_reset = true;
 
+        if (!*arg_skip)
+            if (buf_stdin->content[i] == ' ' && count + (str_wordlen(buf_stdin->content + 1) + 1) >= MAX_CHARS)
+                i++, count_reset = true;
+
         if (*arg_force || *arg_skip)
             if (count >= MAX_CHARS)
-                count_reset = true;
-
-        if (!*arg_skip)
-            if (buf_stdin->content[i] == ' ' && count + (str_wordlen(&buf_stdin->content[i + 1]) + 1) >= MAX_CHARS)
                 count_reset = true;
 
         if (count_reset) {
