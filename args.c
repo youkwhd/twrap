@@ -126,7 +126,7 @@ void __args_debug(arg *args, size_t args_size)
         char **flag = args[i].valid_args + (ARR_SIZE(args[i].valid_args) - 1);
         for (; *flag == NULL; flag--);
 
-        printf("[INFO]: argument %s is ", *flag);
+        printf("[INFO]: argument '%s': ", *flag);
 
         switch (args[i].arg_value_type) {
         case ARG_VALUE_BOOL:
