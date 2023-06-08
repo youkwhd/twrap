@@ -24,9 +24,6 @@ int main(int argc, char **argv)
 
     args_init(argc, argv, args, ARR_SIZE(args));
 
-    if (*(bool *)arg_debug_args)
-        __args_debug(args, ARR_SIZE(args));
-
     buf *buf_stdin = buf_init();
     buf_read(buf_stdin);
 
@@ -57,6 +54,10 @@ int main(int argc, char **argv)
         count_reset ? count = 1 : count++;
     }
 
+    if (*(bool *)arg_debug_args) {
+        putchar('\n');
+        __args_debug(args, ARR_SIZE(args));
+    }
 
     args_free(args, ARR_SIZE(args));
     buf_free(buf_stdin);

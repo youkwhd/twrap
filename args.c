@@ -20,14 +20,17 @@ arg *args_find_arg(arg *args, size_t args_size, const char *arg_flag, arg_type a
 
 void args_parse_long(const int argc, char **argv, arg *args, size_t args_size)
 {
-    const size_t ARG_DASH_COUNT = 2;
+    const size_t ARG_MIN_DASH = 2;
 
     for (int i = 1; i < argc; i++) {
-        if (str_firstch(argv[i], '-') != ARG_DASH_COUNT)
+        if (str_firstch(argv[i], '-') != ARG_MIN_DASH)
             continue;
 
-        char *flag = argv[i] + ARG_DASH_COUNT;
+        char *flag = argv[i] + ARG_MIN_DASH;
         arg *arg_target = args_find_arg_long(args, args_size, flag);
+
+        if (!arg_target)
+            continue;
 
         switch (arg_target->arg_value_type) {
         case ARG_VALUE_BOOL:
@@ -45,23 +48,26 @@ void args_parse_long(const int argc, char **argv, arg *args, size_t args_size)
 
 void args_parse_short(const int argc, char **argv, arg *args, size_t args_size)
 {
-    const size_t ARG_DASH_COUNT = 1;
+    const size_t ARG_MIN_DASH = 1;
 
     for (int i = 1; i < argc; i++) {
-        if (str_firstch(argv[i], '-') != ARG_DASH_COUNT)
+        if (str_firstch(argv[i], '-') != ARG_MIN_DASH)
             continue;
 
-        char *val = argv[i] + ARG_DASH_COUNT;
-        size_t val_len = strlen(val), val_it = 0;
+        char *val = argv[i] + ARG_MIN_DASH;
+        size_t val_len = strlen(val);
         bool is_multiple_bool = false;
 
         /* since we are parsing
          * short arguments with multiple flags in a single dash,
          * cut and parse it character-by-character.
          */
-        while (val_it < val_len) {
-            const char flag[2] = {val[val_it], '\0'};
+        for (unsigned int j = 0; j < val_len; j++) {
+            const char flag[2] = {val[j], '\0'};
             arg *arg_target = args_find_arg_short(args, args_size, flag);
+
+            if (!arg_target)
+                continue;
 
             switch (arg_target->arg_value_type) {
             case ARG_VALUE_BOOL:
@@ -84,8 +90,6 @@ void args_parse_short(const int argc, char **argv, arg *args, size_t args_size)
                 *arg_target->arg_value_ptr = argv[++i];
                 break;
             }
-
-            val_it++;
         }
     }
 }
@@ -122,7 +126,7 @@ void __args_debug(arg *args, size_t args_size)
         char **flag = args[i].valid_args + (ARR_SIZE(args[i].valid_args) - 1);
         for (; *flag == NULL; flag--);
 
-        printf("[ARGS_DEBUG] %s -> ", *flag);
+        printf("[INFO]: argument %s is ", *flag);
 
         switch (args[i].arg_value_type) {
         case ARG_VALUE_BOOL:
@@ -134,6 +138,4 @@ void __args_debug(arg *args, size_t args_size)
             break;
         }
     }
-
-    putchar('\n');
 }
