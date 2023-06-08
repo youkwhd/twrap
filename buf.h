@@ -14,19 +14,19 @@ typedef struct buf {
     size_t bytes;
 } buf;
 
-/* allocates gbuf
+/* allocates buf
  */
 buf *buf_init();
 
-/* reads FILE 
+/* reads FILE into buf
  */
 void buf_fread(buf *buffer, FILE *fp);
 
-/* grow the size of gbuf
+/* grow the size of buf
  */
 void buf_grow(buf *buffer);
 
-/* free the memory of gbuf
+/* free the memory of buf
  */
 void buf_free(buf *buffer);
 
