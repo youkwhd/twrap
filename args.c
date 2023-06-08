@@ -56,7 +56,6 @@ void args_parse_short(const int argc, char **argv, arg *args, size_t args_size)
 
         char *val = argv[i] + ARG_MIN_DASH;
         size_t val_len = strlen(val);
-        bool is_multiple_bool = false;
 
         /* since we are parsing
          * short arguments with multiple flags in a single dash,
@@ -71,11 +70,9 @@ void args_parse_short(const int argc, char **argv, arg *args, size_t args_size)
 
             switch (arg_target->arg_value_type) {
             case ARG_VALUE_BOOL:
-                is_multiple_bool = true;
                 *(bool *)*arg_target->arg_value_ptr = true;
                 break;
             case ARG_VALUE_BOOL_TOGGLE:
-                is_multiple_bool = true;
                 *(bool *)*arg_target->arg_value_ptr = !*(bool *)*arg_target->arg_value_ptr;
                 break;
             case ARG_VALUE_STR:
@@ -83,8 +80,11 @@ void args_parse_short(const int argc, char **argv, arg *args, size_t args_size)
                  * misplaced with multiple toggle args
                  *
                  * this only occurs on single dash arguments
+                 *
+                 * TODO: return an error
+                 * string argument must be at the end
                  */
-                if (is_multiple_bool)
+                if (j + 1 != val_len)
                     break;
 
                 *arg_target->arg_value_ptr = argv[++i];
