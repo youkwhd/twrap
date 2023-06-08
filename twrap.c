@@ -34,13 +34,13 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    buf *buf_stdin = buf_init();
-    buf_read(buf_stdin);
-
     if (arg_line && atoi(arg_line) <= 0) {
         fprintf(stderr, "twrap: option -l | --line must be more than `%s`.\n", arg_line);
         return 1;
     }
+
+    buf *buf_stdin = buf_init();
+    buf_read(buf_stdin);
 
     const size_t MAX_CHARS = arg_line ? atoi(arg_line) : ARG_LINE_DEFAULT;
 
