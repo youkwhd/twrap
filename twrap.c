@@ -23,7 +23,7 @@ int main(int argc, char **argv)
         {{"l", "line"}, ARG_VALUE_STR, (void *)&arg_line},                  /* how many ASCII code(s) is permitted in a single line */
         {{"f", "force"}, ARG_VALUE_BOOL, (void *)&arg_force},               /* force single word to break up into new line */
         {{"s", "skip"}, ARG_VALUE_BOOL, (void *)&arg_skip},                 /* skip word proportion, break up into new line if met COUNT_ALPHABET_MAX */
-        {{"h", "help"}, ARG_VALUE_BOOL, (void *)&arg_help},                 /* skip word proportion, break up into new line if met COUNT_ALPHABET_MAX */
+        {{"h", "help"}, ARG_VALUE_BOOL, (void *)&arg_help},                 /* shows help message then exits */
         {{"d", "debug-args"}, ARG_VALUE_BOOL, (void *)&arg_debug_args},     /* toggle on debugging for arguments */
     };
 
