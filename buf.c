@@ -5,7 +5,7 @@
 buf *buf_init()
 {
     buf *buffer = malloc(sizeof *buffer);
-    buffer->bytes = (sizeof *buffer->content) * BUF_INITIAL_SIZE;
+    buffer->bytes = (sizeof *buffer->content) + BUF_INITIAL_SIZE;
     buffer->content = malloc(buffer->bytes);
     buffer->size = 0;
 
@@ -31,12 +31,7 @@ void buf_fread(buf *buffer, FILE *fp)
 
 void buf_grow(buf *buffer)
 {
-    size_t grow_multiplier = 1;
-
-    while ((buffer->bytes * grow_multiplier) <= buffer->size)
-        grow_multiplier++;
-
-    buffer->bytes = ((sizeof *buffer->content) * (buffer->size * grow_multiplier));
+    buffer->bytes += BUF_INITIAL_SIZE;
     buffer->content = realloc(buffer->content, buffer->bytes);
 }
 
