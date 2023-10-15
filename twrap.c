@@ -12,7 +12,19 @@
 
 #define ARG_LINE_DEFAULT 65
 
-void help(void);
+void print_usage_and_exit(char *program_name, int exit_code)
+{
+    printf("Usage: %s [OPTION ...] [FILE]\n"
+           "Text wrapper.\n"
+           "\n"
+           "Options:"
+           "    -l, --line NUMBER       How many character in a single line.\n"
+           "    -f, --force             Forces single word to keep on the line\n"
+           "                            useful for keeping URLs proportion.\n"
+           "    -s, --skip              Skips proportion, break line when exceeded.\n"
+           "    -h, --help              Prints this message and exit.\n", program_name);
+    exit(exit_code);
+}
 
 int main(int argc, char **argv)
 {
@@ -29,13 +41,11 @@ int main(int argc, char **argv)
 
     args_init(argc, argv, args, ARR_SIZE(args));
 
-    if (*arg_help) {
-        help();
-        return 0;
-    }
+    if (*arg_help)
+        print_usage_and_exit(argv[0], 0);
 
     if (arg_line && atoi(arg_line) <= 0) {
-        fprintf(stderr, "twrap: option -l | --line must be more than `%s`.\n", arg_line);
+        fprintf(stderr, "%s: option -l | --line must be more than `%s`.\n", argv[0], arg_line);
         return 1;
     }
 
@@ -68,15 +78,13 @@ int main(int argc, char **argv)
         count++;
     }
 
-    if (*arg_debug_args)
-        putchar('\n'), __args_debug(args, ARR_SIZE(args));
+    if (*arg_debug_args) {
+        putchar('\n');
+        __args_debug(args, ARR_SIZE(args));
+    }
 
     args_free(args, ARR_SIZE(args));
     buf_free(buf_stdin);
     return 0;
 }
 
-void help()
-{
-    printf("Usage: twrap [OPTION] [FILE]\n");
-}
