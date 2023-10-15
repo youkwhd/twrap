@@ -8,7 +8,7 @@ Installation
 
 Configured only for UNIX systems for the time being:
 
-    sudo make clean install
+    make clean install
 
 Or just build it locally:
 
