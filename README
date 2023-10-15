@@ -1,11 +1,22 @@
 twrap
 =====
 
-simple (t)ext (wrap)per utility to wrap ASCII characters. 
+Text wrapper utility, wraps text from stdin into stdout.
 
-i didn't know fold(1) exists, that's why i made this software.
+Installation
+------------
 
-a sample use case for this utility is this README and each every
-ASCII text-based README's on my github.
+Configured only for UNIX systems for the time being:
 
-see twrap(1) for usages
+    sudo make clean install
+
+Or just build it locally
+
+    make
+
+Examples
+--------
+
+Wraps the roff file mentioned:
+
+    cat twrap.1 | ./twrap
