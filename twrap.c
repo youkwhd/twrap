@@ -14,8 +14,8 @@
 
 void print_usage_and_exit(char *program_name, int exit_code)
 {
-    printf("Usage: %s [OPTION ...] [FILE]\n"
-           "Text wrapper.\n"
+    printf("Usage: %s [OPTION ...]\n"
+           "Text wrapper, wraps text from stdin into stdout.\n"
            "\n"
            "Options:"
            "    -l, --line NUMBER       How many character in a single line.\n"
@@ -26,6 +26,8 @@ void print_usage_and_exit(char *program_name, int exit_code)
     exit(exit_code);
 }
 
+/* TODO: accept file other than stdin
+ */
 int main(int argc, char **argv)
 {
     char *arg_line;
@@ -54,28 +56,35 @@ int main(int argc, char **argv)
 
     const size_t MAX_CHARS = arg_line ? atoi(arg_line) : ARG_LINE_DEFAULT;
 
-    for (size_t i = 0, count = 0; buf_stdin->content[i] != '\0'; i++) {
+    for (size_t i = 0, count = 0; buf_stdin->content[i] != '\0'; i++, count++) {
         bool count_reset = false;
 
-        if (buf_stdin->content[i] == '\n')
-            i++, count_reset = true;
+        if (buf_stdin->content[i] == '\n') {
+            count_reset = true;
+            i++;
+        }
 
-        if (!*arg_skip)
-            if (buf_stdin->content[i] == ' ' && (count + 1) + (str_wordlen(&buf_stdin->content[i + 1])) > MAX_CHARS)
-                i++, count_reset = true;
-
-        if (!*arg_force || *arg_skip)
-            if (count >= MAX_CHARS)
+        if (!*arg_skip) {
+            if (buf_stdin->content[i] == ' ' && (count + 1) + (str_wordlen(&buf_stdin->content[i + 1])) > MAX_CHARS) {
                 count_reset = true;
+                i++;
+            }
+        }
+
+        if (!*arg_force || *arg_skip) {
+            if (count >= MAX_CHARS) {
+                count_reset = true;
+            }
+        }
 
         if (count_reset) {
-            i--, count = 0;
+            count = 0;
+            i--;
             putchar('\n');
             continue;
         }
 
         putchar(buf_stdin->content[i]);
-        count++;
     }
 
     if (*arg_debug_args) {
